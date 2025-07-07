@@ -1,0 +1,35 @@
+# überschreibt die Frage aus dem Verfahrensmodul
+---
+section: verfahren
+question: |
+  Wer soll die Leistung bekommen?
+subquestion: 
+  Bitte gib die Daten der Person an, für die die Leistung ist.  
+#pre: |
+#  Leistung ${ verfahren.antrag.leistung }
+fields:
+  - Vorname: verfahren.antragsteller[i].name.first
+  - Nachname: verfahren.antragsteller[i].name.last
+  - Straße und Hausnummer: verfahren.antragsteller[i].address.address
+  - Postleitzahl: verfahren.antragsteller[i].address.zip
+    input type: ajax
+    action: get_plzlist
+  - Stadt: verfahren.antragsteller[i].address.city
+---
+question: Wähle eine Kontaktperson aus
+subquestion: An die ausgewählte Person wird die Behörde bzw. das Gericht deine Korrespondenz schicken.
+fields:
+  - Kontakt: empfaenger
+    datatype: object
+    default: verfahren.antragsteller[0]
+    choices: empfaenger_choice
+---
+sets: empfaenger_choice
+code: | 
+  if verfahren.antragsteller.there_is_another == False and \
+      verfahren.antragsteller[0].vertreter.there_is_another == False:
+    empfaenger_choice.append(verfahren.antragsteller[0])
+    for v in verfahren.antragsteller[0].vertreter:
+      empfaenger_choice.append(v)
+    empfaenger_choice.gathered = True
+---

@@ -1,0 +1,26 @@
+question: Es eilt?
+subquestion: |
+  Du hast angegeben, dass du die Leistung zum ${ verfahren.antrag.leistung_ab_wann } 
+  benötigst und dass du schon am ${ verfahren.schritte['antrag'].datum } einen Antrag 
+  gestellt hast.  
+  
+  Das spricht dafür, bei Gericht ein Eilverfahren zu beantragen. Genauere Informationen erhältst du mit der Auswertung.
+  
+  Bitte führe noch einmal aus, warum du die Leistung dringend zum ${ verfahren.antrag.leistung_ab_wann } benötigst.
+fields:
+  no label: begruendung_eilbeduerftigkeit
+  input type: area
+  hint: |
+    ${ hint_eilbeduerftigkeit }
+---
+code: |
+  antrag_eilverfahren = defined("verfahren.schritte['antrag'].datum") and as_datetime(verfahren.schritte['antrag'].datum) < current_datetime().minus(months=3)
+  
+  if ((defined("verfahren.schritte['antrag'].datum") and \
+    as_datetime(verfahren.schritte['antrag'].datum) < current_datetime().minus(months=3)) or \
+    defined("verfahren.schritte['bescheid'].datum")) and \
+    as_datetime(verfahren.antrag.leistung_ab_wann) < current_datetime().plus(weeks=8):
+    verfahren.antrag.eilverfahren = True
+  
+  else:
+    verfahren.antrag.eilverfahren = False

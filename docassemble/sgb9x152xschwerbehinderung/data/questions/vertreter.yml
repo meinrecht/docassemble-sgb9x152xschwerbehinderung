@@ -1,0 +1,60 @@
+sets: verfahren.antragsteller[0].vertreter.there_are_any
+need: verfahren.antragsteller[0].name.first
+code: |
+  if abfrage_vertreter_zwingend == True:
+    verfahren.antragsteller[0].vertreter.there_are_any = True
+---
+section: verfahren
+question: |
+  Vertretung von ${ verfahren.antragsteller[i].name.first } ${ verfahren.antragsteller[i].name.last }
+subquestion: |
+   Wird ${ verfahren.antragsteller[i].name.first } ${ verfahren.antragsteller[i].name.last } vertreten (z.B. von den Eltern, einer Betreuerin usw.)? 
+yesno: verfahren.antragsteller[i].vertreter.there_are_any
+question metadata:
+  context_key_1: ${ verfahren.antrag.context_key_1 if defined("verfahren.antrag.context_key_1") else "" }
+  context_key_2: ${ verfahren.antrag.context_key_2 if defined("verfahren.antrag.context_key_2") else "" }
+---
+section: verfahren
+question: |
+  Wer vertritt ${ verfahren.antragsteller[i].name.first } ${ verfahren.antragsteller[i].name.last }?
+subquestion: |
+  Bitte mache Angaben zu der Person, die ${ verfahren.antragsteller[i].name.first } ${ verfahren.antragsteller[i].name.last } vertreten soll. 
+
+  Die vertretungsberechtigte Person muss das erstellte Dokument unterschreiben. 
+fields:
+  - Vorname: verfahren.antragsteller[i].vertreter[j].name.first
+  - Nachname: verfahren.antragsteller[i].vertreter[j].name.last
+  - Straße und Hausnummer: verfahren.antragsteller[i].vertreter[j].address.address
+  - Postleitzahl: verfahren.antragsteller[i].vertreter[j].address.zip
+    input type: ajax
+    action: get_plzlist
+  - Stadt: verfahren.antragsteller[i].vertreter[j].address.city
+  - Vertretungsberechtigt als: verfahren.antragsteller[i].vertreter[j].rolle
+    required: True
+    choices: 
+      - Mutter: mutter
+      - Vater: vater
+      - Vormund: vormund
+      - Vormundin: vormundin
+      - Betreuer: betreuer
+      - Betreuerin: betreuerin
+      - Vorsorgebevollmächtigter: vorsorgebevollmaechtigter
+      - Vorsorgebevollmächtigte: vorsorgebevollmaechtigte
+under: |
+  ---
+  Du kannst im nächsten Schritt bei Bedarf weitere vertretungsberechtigte Personen angeben.
+question metadata:
+  context_key_1: ${ verfahren.antrag.context_key_1 if defined("verfahren.antrag.context_key_1") else "" }
+  context_key_2: ${ verfahren.antrag.context_key_2 if defined("verfahren.antrag.context_key_2") else "" }
+---
+section: verfahren
+question: |
+  Weitere vertretungsberechtigte Personen
+subquestion: |
+  Möchtest du weitere vertretungsberechtigte Personen von ${ verfahren.antragsteller[i].name.first } ${ verfahren.antragsteller[i].name.last } angeben?
+#pre: |
+#  Leistung ${ verfahren.antrag.leistung }
+yesno: verfahren.antragsteller[i].vertreter.there_is_another
+question metadata:
+  context_key_1: ${ verfahren.antrag.context_key_1 if defined("verfahren.antrag.context_key_1") else "" }
+  context_key_2: ${ verfahren.antrag.context_key_2 if defined("verfahren.antrag.context_key_2") else "" }

@@ -1,0 +1,45 @@
+# die untenstehenden Variablen müssen gesetzt werden, zudem die Hinweise am Ende beachten! 
+---
+initial: True
+code: |
+  if not defined("static_data_set"):
+    verfahren.antrag.leistung = "Nachweis eines Platzes in einer Kindertageseinrichtung" # genaue Bezeichnung aus dem Gesetz
+    leistung_umgangssprachlich = "Kitaplatz" # umgangssprachliche Bezeichnung der Leistung
+    verfahren.antrag.gesetz = "§ xy SGB XY" # Anspruchsgrundlage
+    verfahren.antrag.gerichtsart = "sozial" # GERICHTSARTEN = 'zivil', 'verwaltung', 'sozial', 'familie', 'arbeit', 'betreu', 'finanz',
+    verfahren.antrag.frist_behoerde = 3 # Frist für Untätigkeitsklage (s.u.)
+    hint_eilbeduerftigkeit = "z.B. Ich verliere meine Wohnung, wenn ich zum angegebenen Zeitpunkt kein Wohngeld bekomme." # setzt in das Eingabefeld für Begründung Eilbedürftigkeit einen hint
+    infotext_leistung = "Die Leistung XY is dafür da, dass... Wichtig zu wissen ist, dass..." # für das Infoblatt
+    kostenlos = True
+    abfrage_vertreter_zwingend = False # auf True setzen, wenn zwingend ein Vertreter abgefragt werden soll, zB bei Minderjährigen
+    if not kostenlos:
+      stripe_price_id = "price_1RTlKrETkOlcKcP32ZiOeBmg"
+      stripe_payment_amount = get_amount_from_price_id(
+        stripe_price_id,
+        quantity=1,
+      )
+    interviewpreis = currency(stripe_payment_amount) if defined("stripe_payment_amount") else currency(0)
+    static_data_set = True
+---
+sets: verfahren.antragsteller.there_is_another
+code: |
+  if verfahren.antragsteller.number(): 
+    verfahren.antragsteller.there_is_another = False
+---
+## HINWEISE
+
+# Frage nach der zuständigen Behörde ggf anpassen in verfahren_questions.yml
+# Freies Eingabefeld für die Begründung sollte in begruendungen.yml angepasst werden
+# Variable verfahren.antrag.frist_behoerde prüfen: Untägkeitsfrist - Sozialgericht 6 Monate bei Anträgen, 3 Monate bei Widersprüchen!!, Verwaltung, Finanz 3 Monate
+
+# Untägkeitsfrist: derzeitige Regelung in antrag.yml in VerfahrenModul: Sozialgericht: 6 Monate, Verwaltung, Finanz: 3 Monate; kann alternativ pro Interview gesetzt werden über die variable verfahren.antrag.frist_behoerde
+
+# Widerspruchsverfahren: über verfahren.widerspruchsverfahren kann gesetzt werden, ob ein widerspruchsverfahren durchgeführt wird, oder nicht. In schritte.yml wird gesetzt: 
+#if verfahren.bundesland in ['NI', 'ST'] and verfahren.antrag.gerichtsart == "verwaltung": 
+  # verfahren.widerspruchsverfahren = False
+
+# Untätigkeitsklage im Verfahrensmodul wie folgt geregelt, gericht_plz bei bedarf einfach pro interview setzen, je nachdem, worauf sie beruht (auf kläger-plz, beklagten-plz oder einer anderen plz); ggf. Möglichkeit einer Gerichtsstandswahl einbauen
+# if verfahren.antrag.gerichtsart == "verwaltung":
+  # gericht_plz = verfahren.behoerde.address.zip
+# else:
+  # gericht_plz = verfahren.antragsteller[0].address.zip

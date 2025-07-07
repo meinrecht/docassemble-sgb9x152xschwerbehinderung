@@ -1,0 +1,12 @@
+---
+question: Angaben zu deiner Situation
+subquestion: |
+  Bitte erkläre in eigenen Worten, was du brauchst. Mache genaue Angaben zu deiner Lebenssituation.  
+
+  **Wichtig ist, *dass* du die konkrete Situation erklärst. Es kommt nicht darauf an, *wie* du schreibst.**
+fields:
+  no label: begruendung
+  input type: area
+  hint: |
+    "Zum Beispiel: Ich benötige XY, weil..."
+---

@@ -1,0 +1,198 @@
+body {
+    color-scheme: light;
+    --deinrecht-gruen: #389B48;
+    --deinrecht-gruen-rgb: 56, 155, 72;
+    --beck-gray: #353a3f;
+    --beck-gray-hsl: 210deg 8.62%;
+    --beck-gray-90: #F5F5F5;
+    --beck-gray-95: #fff;
+    --beck-gray-rgb: 53, 58, 63; 
+    --beck-warning: #f5c344;
+    --beck-warning-rgb: 245, 195, 68;
+    --bs-red: var(--deinrecht-gruen);
+    --bs-primary: var(--deinrecht-gruen);
+    --bs-secondary: var(--deinrecht-gruen);
+    --bs-success: var(--deinrecht-gruen);
+    --bs-info: var(--deinrecht-gruen);
+    --bs-warning: var(--beck-warning);
+    --bs-danger: var(--deinrecht-gruen);
+    --bs-primary-rgb: var(--deinrecht-gruen-rgb);
+    --bs-secondary-rgb: var(--deinrecht-gruen-rgb);
+    --bs-success-rgb: var(--deinrecht-gruen-rgb);
+    --bs-info-rgb: var(--deinrecht-gruen-rgb);
+    --bs-warning-rgb: var(--beck-warning-rgb);
+    --bs-danger-rgb: var(--deinrecht-gruen-rgb);
+    --bs-secondary-bg-subtle: var(--beck-gray-90);
+    --bs-link-color: var(--deinrecht-gruen);
+    --bs-link-color-rgb: var(--deinrecht-gruen-rgb);
+    --bs-link-decoration: underline;
+    --bs-link-hover-color: rgba(var(--deinrecht-gruen-rgb), 0.8);
+    --bs-link-hover-color-rgb: var(--deinrecht-gruen-rgb);
+}
+
+.navbar {
+    --bs-navbar-color: rgba(var(--bs-emphasis-color-rgb), 0.65);
+    --bs-navbar-hover-color: rgba(var(--bs-emphasis-color-rgb), 0.8);
+    --bs-navbar-disabled-color: rgba(var(--bs-emphasis-color-rgb), 0.3);
+    --bs-navbar-active-color: rgba(var(--deinrecht-gruen-rgb), 0.8);
+    --bs-navbar-brand-color: rgba(var(--back-red-rgb), 1);
+    --bs-navbar-brand-hover-color: rgba(var(--deinrecht-gruen-rgb), 1);
+    background-color: var(--beck-gray-95) !important;
+}
+
+.footer {
+    background-color: var(--beck-gray-95) !important;
+}
+
+.navbar-nav {
+    --bs-nav-link-color: var(--deinrecht-gruen);
+    --bs-nav-link-hover-color: var(--deinrecht-gruen);
+    --bs-nav-link-disabled-color: var(--bs-navbar-disabled-color);
+}
+
+button#dasourcetoggle:hover, button#dasourcetoggle:active {
+    color: #fff;
+    background: var(--deinrecht-gruen);
+}
+
+#damobile-toggler {
+    --bs-navbar-toggler-border-color: var(--deinrecht-gruen);
+    border: none;
+}
+
+#damobile-toggler:focus {
+    box-shadow: 0 0 0 var(--bs-navbar-toggler-focus-width) var(--deinrecht-gruen);
+}
+
+#damobile-toggler:focus-visible {
+    outline: unset;
+    border: unset;
+}
+
+#damobile-toggler > span.navbar-toggler-icon {
+    --bs-navbar-toggler-icon-bg: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%23bd2826' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+.dropdown-menu {
+    --bs-dropdown-color: #fff;
+    --bs-dropdown-bg: var(--beck-gray);
+    --bs-dropdown-link-color: var(--bs-body-color);
+    --bs-dropdown-link-hover-color: #fff;
+    --bs-dropdown-link-hover-bg: var(--deinrecht-gruen);
+    --bs-dropdown-link-active-color: #fff;
+    --bs-dropdown-link-active-bg: var(--deinrecht-gruen);
+    --bs-dropdown-link-disabled-color: var(--bs-tertiary-color);
+    --bs-dropdown-header-color: #6c757d;
+}
+
+.da-pad-for-navbar {
+    padding-top: calc(66px + 1em);
+}
+
+.dropdown-menu {
+    --bs-dropdown-color: #fff;
+    --bs-dropdown-bg: var(--beck-gray);
+    --bs-dropdown-link-color: #fff;
+    --bs-dropdown-link-hover-color: #fff;
+    --bs-dropdown-link-hover-bg: var(--deinrecht-gruen);
+    --bs-dropdown-link-active-color: #fff;
+    --bs-dropdown-link-active-bg: var(--deinrecht-gruen);
+}
+
+.btn {
+    --bs-btn-color: #fff;
+    --bs-btn-bg: var(--deinrecht-gruen);
+    --bs-btn-border-color: rgba(var(--deinrecht-gruen-rgb), 0);
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: rgba(var(--deinrecht-gruen-rgb), 0.8);
+    --bs-btn-hover-border-color: var(--deinrecht-gruen);
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: var(--deinrecht-gruen-rgb);
+    --bs-btn-active-border-color: var(--deinrecht-gruen-rgb);
+    --bs-btn-disabled-color: #fff;
+    --bs-btn-disabled-bg: var(--beck-gray);
+    --bs-btn-disabled-border-color: var(--beck-gray);
+    --bs-btn-focus-box-shadow: var(--deinrecht-gruen);
+}
+
+
+.btn-danger {
+border-radius: 50px
+}
+
+.btn.daquestionbackbutton {
+    --bs-btn-color: var(--deinrecht-gruen);
+    --bs-btn-bg: #fff;
+    --bs-btn-border-color: rgba(255, 255, 255, 0);
+    --bs-btn-hover-color: var(--deinrecht-gruen);
+    --bs-btn-hover-bg: #fff;
+    --bs-btn-hover-border-color: rgba(255, 255, 255, 0);
+    --bs-btn-active-color: var(--deinrecht-gruen);
+    --bs-btn-active-bg: #fff;
+    --bs-btn-active-border-color: rgba(255, 255, 255, 0);
+    --bs-btn-focus-color: var(--deinrecht-gruen);
+    --bs-btn-focus-bg: #fff;
+    --bs-btn-focus-border-color: rgba(255, 255, 255, 0);
+    text-decoration: unset;
+}
+
+.btn.daquestionbackbutton:hover,
+.btn.daquestionbackbutton:active,
+.btn.daquestionbackbutton:focus,
+.btn.daquestionbackbutton:focus-visible {
+    text-decoration: underline;
+}
+
+.btn-primary {
+    --bs-btn-color: #fff;
+    --bs-btn-bg: var(--deinrecht-gruen);
+    --bs-btn-border-color: var(--deinrecht-gruen);
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: rgba(var(--deinrecht-gruen-rgb), 0.8);
+    --bs-btn-hover-border-color: var(--beck-rgb);
+    border-radius: 50px;
+}
+
+.btn-secondary {
+    --bs-btn-color: var(--deinrecht-gruen);
+    --bs-btn-bg: #fff;
+    --bs-btn-border-color: var(--deinrecht-gruen);
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: rgba(var(--deinrecht-gruen-rgb), 0.8);
+    --bs-btn-hover-border-color: var(--deinrecht-gruen);
+    border-radius: 50px;
+}
+
+.btn-warning {
+    --bs-btn-color: #000;
+    --bs-btn-bg: var(--beck-warning);
+    --bs-btn-border-color: var(--beck-warning);
+    --bs-btn-focus-shadow-rgb: 217, 164, 6;
+    border-radius: 50px;
+}
+
+.dafooter>.container {
+    max-width: unset;
+    padding: unset;
+}
+
+.form-control:focus {
+    color: var(--bs-body-color);
+    background-color: var(--bs-body-bg);
+    border-color: var(--deinrecht-gruen);
+    outline: 0;
+    box-shadow: 0 0 0 .25rem rgba(var(--deinrecht-gruen-rgb), .25);
+}
+
+.form-select:focus {
+    border-color: var(--deinrecht-gruen);
+    outline: 0;
+    box-shadow: 0 0 0 .25rem rgba(var(--deinrecht-gruen-rgb), .25);
+}
+
+#daquestion{
+  margin-top: 45px;
+}
+#dahelp{
+  margin-top: 45px;
+}

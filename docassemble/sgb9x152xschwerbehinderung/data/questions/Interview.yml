@@ -1,0 +1,41 @@
+#Dieses Interview ist nicht ausführbar, es soll als Modul für die Interviews auf Deinrecht Digital verwendet werden. Diese können produziert werden mit Kopien des Interviews "InterviewTemplateDeinrecht" dort ist dieses yaml eingebunden.
+metadata:
+  title: Interaktives Formular
+  short title: Interaktives Formular
+  error action: on_error
+  resume button label: |
+    Weiter
+  show login: False
+  exit url: https://deinrecht.digital
+  exit label: Interview abbrechen
+  logo: <img src="https://app-dev.deinrecht.digital/playgroundstatic/Kitaplatz/5/deinrechtlogo.png" height="60" width="90">
+---
+features:
+  javascript: DeinRecht.js
+  auto color scheme: False
+---
+include:
+  - docassemble.StripeEinbindung:stripe_paywall.yml
+  - docassemble.Person:person_x.yml
+  - docassemble.VerfahrenModul:verfahren.yml
+  - docassemble.DeinRechtDesign:features.yml
+  - antragsteller.yml
+  - vertreter.yml
+  - eilbeduerftigkeit.yml
+  - begruendungen.yml
+  - verfahren_questions.yml
+  - screens.yml
+  #- review_screen.yml
+---
+modules:
+  - gword.gnoun
+  - gword.gclasses
+---
+objects:
+  - antragsteller: GIndividual.using(wort="Antragsteller")
+  - behoerde: GIndividual.using(wort="Behörde")
+  - widerspruchsbehoerde:  GIndividual.using(wort="Widerspruchsbehörde")
+  - empfaenger_choice: DAList.using(object_type=GIndividual.using(wort="Empfänger"), there_are_any=True, auto_gather=False)
+---
+
+# Intro, Datenschutzerklaerung and Endscreen including their logic is now in screens.yml

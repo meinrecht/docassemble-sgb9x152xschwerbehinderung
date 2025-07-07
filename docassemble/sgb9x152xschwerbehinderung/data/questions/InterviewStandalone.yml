@@ -1,0 +1,25 @@
+#dies ist das ausführbare Interview
+---
+include:
+  - Interview.yml
+  - anzupassende_variablen.yml
+---
+mandatory: True
+code: |
+  intro
+  continue_datenschutz
+  for a in verfahren.antragsteller:
+    a  
+    if a.vertreter.number():
+      for v in a.vertreter:
+        v
+  delivery_email
+  #empfaenger_choice
+  #review_personal_data
+  verfahren.antrag.leistung_ab_wann
+  #review
+  dokumente
+  dokumente_erstellen
+  #send_documents included in endscreen target
+  endscreen
+---

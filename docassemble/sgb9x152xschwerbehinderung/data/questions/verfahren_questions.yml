@@ -1,0 +1,109 @@
+section: verfahren
+need: status_choice
+sets: verfahren.status
+question: |
+  Unternommene Schritte
+subquestion:
+  Welche Schritte wurden bislang unternommen?
+fields: 
+  - no label: verfahren.status
+    datatype: radio
+    code: |
+      status_choice
+under: |
+  ---
+  
+  Unten kannst du sehen, wie ein Verwaltungsverfahren ablaufen kann. Nicht immer werden alle Schritte durchlaufen.
+
+  [FILE verwaltungsverfahren.png, 100%]
+question metadata:
+  context_key_1: ${ verfahren.antrag.context_key_1 if defined("verfahren.antrag.context_key_1") else "" }
+  context_key_2: ${ verfahren.antrag.context_key_2 if defined("verfahren.antrag.context_key_2") else "" }
+
+---
+section: verfahren
+question: |
+  Angaben zu ${ verfahren.schritte[i].wort.dativ(artikel='bestimmt') }
+subquestion: |
+  Bitte gib das Datum ${ " und das Aktenzeichen" if verfahren.schritte[i].has_az else "" }
+  ${ verfahren.schritte[i].wort.genitiv(artikel='bestimmt') } an. Wir empfehlen, eine Kopie ${ verfahren.schritte[i].wort.genitiv(artikel='bestimmt') } hochzuladen! Die Datei wird später an das erstellte Dokument angehängt und ist wichtig, um nachzuweisen, welche Schritte es im Verfahren bisher gab.
+fields:
+  - Aktenzeichen: verfahren.schritte[i].az
+    show if: 
+      code: verfahren.schritte[i].has_az
+    help: |
+      Das Aktenzeichen findest auf dem Schreiben der Behörde. Manchmal heißt es statt Aktenzeichen auch nur "Zeichen", "Ihr Zeichen" oder "Mein Zeichen".
+  - Datum: verfahren.schritte[i].datum
+    datatype: date
+    min: ${ min_datum.format('yyyy-MM-dd') }
+    max: ${ today().format('yyyy-MM-dd') }
+    help: |
+      Wann ist dir das Schreiben zugegangen? Wenn du dies nicht weißt, gib bitte das Datum an, das auf dem Schreiben abgedruckt ist.
+  - Dokument: verfahren.schritte[i].dokument
+    required: False
+    datatype: file
+validation code: |
+  del min_datum
+under: |
+  % if verfahren.schritte[i].has_az:
+  ---
+ 
+  Unten siehst du, wie ein Bescheid einer Behörde aussehen kann. Dort ist markiert, wo du das Aktenzeichen und das Datum des Bescheides findest.   
+  
+  [FILE Musterbescheid_neu.jpg, 100%]
+  % endif
+question metadata:
+  context_key_1: ${ verfahren.antrag.context_key_1 if defined("verfahren.antrag.context_key_1") else "" }
+  context_key_2: ${ verfahren.antrag.context_key_2 if defined("verfahren.antrag.context_key_2") else "" }
+---
+section: verfahren
+question: |
+  Rechtsbehelfsbelehrung
+subquestion: |
+  
+  Prüfe bitte, ob der Bescheid von der Behörde eine Rechtsbehelfsbelehrung enthält.  
+  
+  In der Rechtsbehelfsbelehrung steht, ob und was du gegen die Entscheidung machen kannst. Meistens steht sie auf der letzten Seite und hat die Überschrift  "Rechtsbehelfsbelehrung".  
+  
+  **Enthält der Bescheid der Behörde eine solche Rechtsbehelfsbelehrung?**  
+  Wenn du unsicher bist, antworte mit "ja".
+
+yesno: verfahren.antrag.rechtsbehelfsbelehrung
+under: |
+  ---
+  Wenn die Rechtsbehelfsbelehrung fehlt, hast du **1 Jahr** Zeit, dich gegen die Entscheidung der Behörde zu wehren. Wenn es sie gibt hast du **1 Monat** Zeit.
+  
+  Unten siehst du, wie eine Rechtsbehelfsbelehrung aussehen kann.
+
+  [FILE Rechtsbehelfsbelehrung.jpg, 100%]
+question metadata:
+  context_key_1: ${ verfahren.antrag.context_key_1 if defined("verfahren.antrag.context_key_1") else "" }
+  context_key_2: ${ verfahren.antrag.context_key_2 if defined("verfahren.antrag.context_key_2") else "" }
+---
+section: verfahren
+question: |
+  Daten der Behörde
+subquestion: |  
+  
+  **Gib hier bitte die Daten deiner Behörde ein.**  
+  
+  Wenn es bereits Kontakt mit der zuständigen Behörde gab, findest du die Adresse auf dem Schreiben der Behörde. 
+
+  Anderenfalls suche hier die Adresse der Behörde an deinem Wohnort im Internet heraus. Du kannst dafür auch die Behördennummer [115](https://www.115.de) nutzen.
+fields:
+  - Name der Behörde: verfahren.behoerde.name.text
+    hint: |
+      z.B. "Bezirksamt Mitte"
+  - Straße und Hausnummer: verfahren.behoerde.address.address
+  - Postleitzahl: verfahren.behoerde.address.zip
+    input type: ajax
+    action: get_plzlist
+    under text: Wir benötigen die Hausanschrift. Bitte gib keine Postfachadresse ein.
+  - Stadt: verfahren.behoerde.address.city
+question metadata:
+  context_key_1: ${ verfahren.antrag.context_key_1 if defined("verfahren.antrag.context_key_1") else "" }
+  context_key_2: ${ verfahren.antrag.context_key_2 if defined("verfahren.antrag.context_key_2") else "" }
+under: |
+  **Übrigens:**   
+  
+  Selbst wenn du versehentlich eine falsche Behörde angibst, muss diese sich um dein Anliegen kümmern und deine Dokumente an die richtige Behörde weiterleiten.

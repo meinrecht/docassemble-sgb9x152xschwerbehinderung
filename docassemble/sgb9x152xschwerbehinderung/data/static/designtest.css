@@ -1,0 +1,112 @@
+@media screen and (min-width:1000px){
+  div.danavdiv{
+    margin-left: 0px;
+    max-width: 20%;
+    margin-right: 5%;
+    margin-top: 45px;
+  }
+}
+a:not([href]):not([class]){
+  color: #EEEADE;
+}
+a.nav-link.danavlink {
+  color:#4135E6;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+.nav-link {
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+a.danotavailableyet{
+  color: #666666 !Important;
+}
+.dropdown-toggle{
+  margin: 0px;
+}
+#daquestion{
+  margin-top: 45px;
+}
+#dahelp{
+  margin-top: 45px;
+}
+#dahelptoggle{
+  border-radius: 5px;
+}
+.da-pad-for-navbar {
+  margin-bottom: 60px;  
+}
+.btn-primary{
+  background-color: #4135E6 !Important;
+  margin: 0px !Important;
+  border-radius: 100px; !Important;
+  border: none;
+  float: right;
+
+}
+.btn-secondary{
+  border: 0px;
+  background-color: #4135E6 !Important;
+  color: black !Important;
+}
+.nav-link.active{
+  background-color: #ace600 !Important;
+}
+.nav-link{
+  color: #4135E6 !important;
+}
+.navbar{
+  background-color: #EEEADE !Important;
+}
+#daSpinner{
+  margin-top: 20px;
+}
+.progress-bar{
+  background-color: #9D97EE;
+  
+}
+a.danotavailableyet{
+  color: #666666 !Important;
+}
+.navbar-brand{
+  color: #0041a3 !important;
+  font-weight: 600;
+}
+#dropdownMenuButton{
+  color: #0041a3 !important;
+  font-weight: 600;
+}
+a.nav-link.show{
+  color: #4135E6 !important;
+}
+a#navbarDropdown{
+  color: #0041a3 !important;
+}
+#damenuLabel{
+  margin-top: 0px;
+  margin: 10px;
+}
+.daterm{
+  color: #4135E6;
+}
+.dafooter{
+  border-top: 1px solid #4135E6;
+}
+.footer.footer.mt-auto.bg-light.text-center div.container span.text-muted{
+  color: #4135E6 !important;
+  font-weight: 600;
+}
+.form-control {
+display: block;
+width: 100%;
+padding: 5px;
+font-size: 1rem;
+font-weight: 400;
+line-height: 1.5;
+color: black;
+background-color: white;
+background-clip: padding-box;
+border-color: grey;
+border-radius: 0px;
+transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out
+}

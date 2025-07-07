@@ -1,0 +1,1 @@
+Modell für die Erstellung von Interviews für Sozialleistungsansprüche

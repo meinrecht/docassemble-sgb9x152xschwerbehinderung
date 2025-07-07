@@ -1,0 +1,478 @@
+# inro screens and Endscreen including their logik and E-Mail template
+
+question: |
+  ${leistung_umgangssprachlich} - Setze dein Anliegen durch!
+subquestion: |
+  
+  Hier kannst du folgende Dokumente erstellen:  
+  
+  - offizielles Dokument (z.B. Antrag, Widerspruchsschreiben, Klage, Eilantrag etc.) passend zu deiner Situation,  
+  - deine persönliche Auswertung mit wichtigen Informationen zu den nächsten Schritten und zur Leistung.  
+
+   Am Besten hältst du schonmal alle relevanten Dokumente zum Hochladen bereit (z.B. bereits gestellter Antrag, erhaltener Bescheid, Widerspruchsbescheid etc.).  
+  
+  Das Ausfüllen des Formulars dauert 20-30 Minuten.  
+  
+  **Das Erstellen der Dokumente ${ interviewkosten }**
+
+continue button field: intro
+---
+code: |
+  if kostenlos == True:
+    interviewkosten = "ist kostenlos."
+  else: 
+    interviewkosten = f"kostet { interviewpreis }. Du wirst auf eine Bezahlseite geleitet, bevor deine Dokumente erstellt werden."
+---
+question: |
+  Datenschutz und Haftung 
+subquestion: |
+
+  **Datenschutz**  
+  *Deine Daten gehören dir!* Hier gesammelte Daten werden ausschließlich dazu verwendet, das interaktive Formular durchzuführen und für dich die passenden Dokumente zu erstellen. Es gilt unsere [Datenschutzvereinbarung](https://deinrecht.digital/datenschutz/).  
+
+  **Haftung**  
+  *Wir bieten Hilfe zur Selbsthilfe, erbringen aber keine anwaltlichen Dienstleistungen!* Wir haften nur bei Vorsatz, grober Fahrlässigkeit sowie bei schuldhafter Verletzung von Leben, Körper oder Gesundheit unbeschränkt. Es gilt unsere [Vereinbarung zur Haftungsbegrenzung](https://deinrecht.digital/haftung/).  
+    
+  -------------------------  
+  
+  Wenn du auf "Weiter" klickst, bestätigst du, dass du unsere **Datenschutzvereinbarung** und unsere **Vereinbarung zur Haftungsbegrenzung** gelesen hast und mit beiden Vereinbarungen einverstanden bist.
+  
+fields:
+  - Ich akzeptiere die Datenschutzvereinbarung: datenschutz_akzeptiert
+    datatype: yesnowide
+    required: True
+  - Ich akzeptiere die Vereinbarung zur Haftungsbegrenzung: haftungsbegrenzung_akzeptiert
+    datatype: yesnowide
+    required: True
+continue button field: continue_datenschutz
+---
+code: |
+  if verfahren.status == "nichts":
+    anzeigetext = "Wir empfehlen, einen **Antrag** zu stellen. \n\nDrucke den Antrag aus und sende ihn an die dort angegebene Stelle."
+    dokumente = [antrag, infoblatt]
+  
+  elif verfahren.status == "antrag":  
+    if not verfahren.frist_abgelaufen:
+      if verfahren.antrag.eilverfahren == True:
+        anzeigetext = f"Du hast angegeben, dass du die Leistung bereits ab dem ${ verfahren.antrag.leistung_ab_wann } benötigst. Wir empfehlen daher, bei Gericht einen **Antrag auf einstweilige Anordnung** zu stellen. \n\nDrucke den Antrag auf einstweilige Anordnung aus und sende ihn an die dort angegebene Stelle."
+        dokumente = [einstweilige_anordnung, infoblatt]
+      else:
+        anzeigetext = "Aktuell kannst du keine weiteren Schritte vornehmen. Du musst warten bis die Behörde eine Entscheidung getroffen hat."
+        dokumente = [infoblatt]
+    else:
+      if verfahren.antrag.eilverfahren == True:
+        anzeigetext = f"Wir empfehlen, **Untätigkeitsklage** zu erheben. Wir empfehlen zudem, einen **Antrag auf einstweilige Anordnung** zu stellen, denn du hast angegeben, dass du die Leistung bereits ab dem { verfahren.antrag.leistung_ab_wann } benötigst. \n\nDrucke die Untätigkeitsklage und den Antrag auf einstweilige Anordnung aus und sende sie an die dort angegebenen Stellen."
+        dokumente = [untaetigkeitsklage, einstweilige_anordnung, infoblatt]
+      else:
+        anzeigetext = "Wir empfehlen, **Untätigkeitsklage** zu erheben. \n\nDrucke die Untätigkeitsklage aus und sende sie an die dort angegebene Stelle."  
+        dokumente = [untaetigkeitsklage, infoblatt]
+       
+  elif verfahren.status == "bescheid":
+    log(f"verfahren.next {verfahren.next}")   
+    if verfahren.next.name.text == "widerspruch":
+      naechstes_dokument = widerspruch
+    elif verfahren.next.name.text == "klage":
+      naechstes_dokument = klage
+     
+    if not verfahren.frist_abgelaufen:
+      if verfahren.antrag.eilverfahren == True:
+        anzeigetext = f"Wir empfehlen, die unten stehenden Rechtbehelfe einzulegen.\n\n Drucke dafür die beigefügten Dokumente aus und sende sie an die in den Dokumenten angegebenen Stellen."
+        dokumente = [naechstes_dokument, einstweilige_anordnung, infoblatt]
+      else:
+        anzeigetext = "Wir empfehlen, die unten stehenden Rechtbehelfe einzulegen. \n\nDrucke dafür das beigefügte Dokument aus und sende es an die im Dokument angegebene Stelle.\n\n"   
+        dokumente = [naechstes_dokument, infoblatt]
+    else:
+      anzeigetext = "Die Widerspruchsfrist ist abgelaufen. Wir empfehlen, **einen Überprüfungsantrag** zu stellen. \n\nDrucke dafür das beigefügte Dokument aus und sende es an die im Dokument angegebene Stelle.\n\n"
+      dokumente = [ueberpruefungsantrag, infoblatt]
+      
+  elif verfahren.status == "widerspruch":
+    if not verfahren.frist_abgelaufen:
+      if verfahren.antrag.eilverfahren == True:
+        anzeigetext = f"Du hast angegeben, dass du die Leistung bereits ab dem { verfahren.antrag.leistung_ab_wann } benötigst. Wir empfehlen daher, einen **Antrag auf einstweilige Anordnung** zu stellen. \n\nDrucke den Antrag auf einstweilige Anordnung aus und sende ihn an die dort angegebene Stelle."
+        dokumente = [einstweilige_anordnung, infoblatt]
+      else:
+        anzeigetext = "Aktuell kannst du keine weiteren Schritte vornehmen. Du musst warten bis die Behörde eine Entscheidung getroffen hat."
+        dokumente = [infoblatt]
+    else:
+      if verfahren.antrag.eilverfahren == True:
+        anzeigetext = f"Wir empfehlen, eine **Untätigkeitsklage** zu erheben. Wir empfehlen zudem, einen **Antrag auf einstweilige Anordnung** zu stellen, weil du angegeben hast, dass du die Leistung bereits ab dem { verfahren.antrag.leistung_ab_wann } benötigst. \n\nDrucke die Untätigkeitsklage und den Antrag auf einstweilige Anordnung aus und sende sie an die dort angegebenen Stellen."
+        dokumente = [untaetigkeitsklage, einstweilige_anordnung, infoblatt]
+      else:
+        anzeigetext = "Wir empfehlen, eine **Untätigkeitsklage** zu erheben. Drucke die Untaetigkeitsklage aus und sende sie an die dort angegebene Stelle."  
+        dokumente = [untaetigkeitsklage, infoblatt]
+          
+  elif verfahren.status == "widerspruchsbescheid":  
+    if not verfahren.frist_abgelaufen:
+      if verfahren.antrag.eilverfahren == True:
+        anzeigetext = f"Wir empfehlen, **Klage** zu erheben. Wir empfehlen zudem, einen **Antrag auf einstweilige Anordnung** zu stellen, denn du hast angegeben, dass du die Leistung bereits ab dem { verfahren.antrag.leistung_ab_wann } benötigst. Drucke die Klage und den Antrag auf einstweilige Anordnung aus und sende sie an die dort angegebenen Stellen."
+        dokumente = [klage, einstweilige_anordnung, infoblatt]
+      else:
+        anzeigetext = "Wir empfehlen, **Klage** zu erheben. Drucke die Klage aus und sende sie an die dort angegebene Stelle."
+        dokumente = [klage, infoblatt]
+    else:
+      anzeigetext = "Die Klagefrist ist abgelaufen. Wir empfehlen, einen **Überprüfungsantrag** zu stellen. Drucke den Überprüfungsantrag aus und sende ihn an die dort angegebene Stelle."
+      dokumente = [ueberpruefungsantrag, infoblatt]
+  elif verfahren.status == "klage":
+    if verfahren.antrag.eilverfahren == True:
+      anzeigetext = f"Du hast angegeben, dass du die Leistung bereits ab dem { verfahren.antrag.leistung_ab_wann } benötigst. Wir empfehlen daher, einen **Antrag auf einstweilige Anordnung** zu stellen. Drucke den Antrag auf einstweilige Anordnung aus und sende ihn an die dort angegebene Stelle."
+      dokumente = [einstweilige_anordnung, infoblatt]
+    else:
+      anzeigetext = "Aktuell kannst du keine weiteren Schritte vornehmen. Du musst abwarten, wie das Gericht über die Klage entscheidet."
+      dokumente = [infoblatt]
+---
+attachment options:
+  metadata:
+    fontfamily: "Open Sans"
+---
+event: show_endscreen
+progress: 100
+question: Deine Dokumente
+subquestion: |
+  Die erstellten Dokumente findest du unten. Du erhältst sie zusätzlich auch per E-Mail.  
+  
+  ${ anzeigetext } **Vergiss nicht, die Dokumente zu unterschreiben!**
+  
+attachment code: |
+  dokumente
+allow emailing: False
+include attachment notice: False
+include download tab: False
+buttons:
+  - Beenden: exit
+    url: https://deinrecht.digital/
+  - Gib uns dein Feedback!: exit
+    url: https://deinrecht.digital/feedback/
+prevent going back: True
+---
+attachment:
+  name: Deine persönliche Auswertung
+  filename: persoenliche_auswertung
+  metadata:
+    FirstFooterLeft: |
+      Seite [PAGENUM]
+    FooterLeft: |
+      Seite [PAGENUM]
+    OneAndAHalfSpacing: True
+    Indentation: False
+    IndentationAmount: 0cm
+    fontfamily: Open Sans
+    SingleSpacing: True
+    HangingIndent: True
+    papersize: a4
+  valid formats:
+      - pdf
+  variable name: infoblatt
+  content file: Infoblatt.md
+---
+attachment:
+  name: Antrag
+  filename: antrag
+  metadata:
+    FirstFooterLeft: |
+      Seite [PAGENUM]
+    FooterLeft: |
+      Seite [PAGENUM]
+    OneAndAHalfSpacing: True
+    Indentation: False
+    IndentationAmount: 0cm
+    fontfamily: Open Sans
+    SingleSpacing: True
+    HangingIndent: True
+    papersize: a4
+  valid formats:
+      - pdf
+  variable name: antrag
+  content file: antrag.md
+---
+attachment:
+  name: Untätigkeitsklage
+  filename: untaetigkeitsklage
+  metadata:
+    FirstFooterLeft: |
+      Seite [PAGENUM]
+    FooterLeft: |
+      Seite [PAGENUM]
+    OneAndAHalfSpacing: True
+    Indentation: False
+    IndentationAmount: 0cm
+    fontfamily: Open Sans
+    SingleSpacing: True
+    HangingIndent: True
+    papersize: a4
+  valid formats:
+      - pdf
+  variable name: untaetigkeitsklage
+  content file: untaetigkeitsklage.md
+---
+attachment:
+  name: Widerspruch
+  filename: widerspruch
+  metadata:
+    FirstFooterLeft: |
+      Seite [PAGENUM]
+    FooterLeft: |
+      Seite [PAGENUM]
+    OneAndAHalfSpacing: True
+    Indentation: False
+    IndentationAmount: 0cm
+    fontfamily: Open Sans
+    SingleSpacing: True
+    HangingIndent: True
+    papersize: a4
+  valid formats:
+      - pdf
+  variable name: widerspruch
+  content file: widerspruch.md
+---
+attachment:
+  name: Überprüfungsantrag
+  filename: ueberprüfungsantrag
+  metadata:
+    FirstFooterLeft: |
+      Seite [PAGENUM]
+    FooterLeft: |
+      Seite [PAGENUM]
+    OneAndAHalfSpacing: True
+    Indentation: False
+    IndentationAmount: 0cm
+    fontfamily: Open Sans
+    SingleSpacing: True
+    HangingIndent: True
+    papersize: a4
+  valid formats:
+      - pdf
+  variable name: ueberpruefungsantrag
+  content file: ueberpruefungsantrag.md
+---
+attachment:
+  name: Klage
+  filename: klage
+  metadata:
+    FirstFooterLeft: |
+      Seite [PAGENUM]
+    FooterLeft: |
+      Seite [PAGENUM]
+    OneAndAHalfSpacing: True
+    Indentation: False
+    IndentationAmount: 0cm
+    fontfamily: Open Sans
+    SingleSpacing: True
+    HangingIndent: True
+    papersize: a4
+  valid formats:
+      - pdf
+  variable name: klage
+  content file: klage.md
+---
+attachment:
+  name: Einstweilige Anordnung
+  filename: einstweilige_anordnung
+  metadata:
+    FirstFooterLeft: |
+      Seite [PAGENUM]
+    FooterLeft: |
+      Seite [PAGENUM]
+    OneAndAHalfSpacing: True
+    Indentation: False
+    IndentationAmount: 0cm
+    fontfamily: Open Sans
+    SingleSpacing: True
+    HangingIndent: True
+    papersize: a4
+  valid formats:
+      - pdf
+  variable name: einstweilige_anordnung
+  content file: einstweilige_anordnung.md
+---
+question: |
+  Wir benötigen deine E-Mail-Adresse.
+fields:
+  - E-mail: delivery_email
+    datatype: email
+---
+need: dokumente
+question: |
+  Deine möglichen Dokumente
+subquestion: |
+  Vielen Dank für deine Angaben! Wir haben diese ausgwertet.  
+  
+  Im nächsten Schritt können wir folgende Dokumente für dich erstellen:  
+  
+  % if verfahren.status == "nichts":
+  - Antragsschreiben  
+  - Persönliche Auswertung mit deinen nächsten Schritten und Infos zur Leistung  
+  
+  % elif verfahren.status == "antrag":  
+    % if not verfahren.frist_abgelaufen:
+      % if verfahren.antrag.eilverfahren == True:
+  - Antrag auf einstweilige Anordnung  
+  - Persönliche Auswertung mit deinen nächsten Schritten und Infos zur Leistung
+      
+  
+      % else:
+  - Persönliche Auswertung mit Infos zur Leistung
+  
+  Weitere Dokumente konnten wir leider nicht für dich erstellen, denn aktuell kannst du keine weiteren Schritte vornehmen. Du musst warten bis die Behörde eine Entscheidung getroffen hat.
+      % endif
+  
+    % else:
+      % if verfahren.antrag.eilverfahren == True:
+  - Untätigkeitsklage  
+  - Antrag auf einstweilige Anordnung  
+  - Persönliche Auswertung mit deinen nächsten Schritten und Infos zur Leistung  
+  
+      % else:
+  - Untätigkeitsklage  
+  - Persönliche Auswertung mit deinen nächsten Schritten und Infos zur Leistung  
+
+      % endif
+    % endif
+       
+  % elif verfahren.status == "bescheid":
+    % if not verfahren.frist_abgelaufen:
+      % if verfahren.next.name.text == "widerspruch": 
+        % if verfahren.antrag.eilverfahren == True:
+  - Widerspruch  
+  - Antrag auf einstweilige Anordnung  
+  - Persönliche Auswertung mit deinen nächsten Schritten und Infos zur Leistung  
+  
+        % else:
+  - Widerspruch  
+  - Persönliche Auswertung mit deinen nächsten Schritten und Infos zur Leistung  
+
+        % endif
+  
+      % elif verfahren.next.name.text == "klage":
+        % if verfahren.antrag.eilverfahren == True:
+  - Klage  
+  - Antrag auf einstweilige Anordnung  
+  - Persönliche Auswertung mit deinen nächsten Schritten und Infos zur Leistung  
+  
+        % else:
+  - Klage  
+  - Persönliche Auswertung mit deinen nächsten Schritten und Infos zur Leistung  
+    
+        % endif
+      % endif
+    % else:
+  - Überprüfungsantrag  
+  - Persönliche Auswertung mit deinen nächsten Schritten und Infos zur Leistung  
+  
+    % endif
+      
+  % elif verfahren.status == "widerspruch":
+    % if not verfahren.frist_abgelaufen:
+      % if verfahren.antrag.eilverfahren == True:
+  - Antrag auf einstweilige Anordnung  
+  - Persönliche Auswertung mit deinen nächsten Schritten und Infos zur Leistung  
+  
+      % else:
+  - Persönliche Auswertung mit Infos zur Leistung  
+
+  Weitere Dokumente konnten wir leider nicht für dich erstellen, denn aktuell kannst du keine weiteren Schritte vornehmen. Du musst warten bis die Behörde eine Entscheidung getroffen hat.
+  
+      % endif
+    % else:
+      % if verfahren.antrag.eilverfahren == True:
+  - Untätigkeitsklage  
+  - Antrag auf einstweilige Anordnung
+  - Persönliche Auswertung mit deinen nächsten Schritten und Infos zur Leistung  
+  
+      % else:
+  - Untätigkeitsklage 
+  - Persönliche Auswertung mit deinen nächsten Schritten und Infos zur Leistung  
+  
+      % endif
+    % endif
+          
+  % elif verfahren.status == "widerspruchsbescheid":  
+    % if not verfahren.frist_abgelaufen:
+      % if verfahren.antrag.eilverfahren == True:
+  - Klage  
+  - Antrag auf einstweilige Anordnung  
+  - Persönliche Auswertung mit deinen nächsten Schritten und Infos zur Leistung  
+  
+      % else:
+  - Klage  
+  - Persönliche Auswertung mit deinen nächsten Schritten und Infos zur Leistung  
+  
+      % endif
+    % else:
+  - Überprüfungsantrag 
+  - Persönliche Auswertung mit deinen nächsten Schritten und Infos zur Leistung  
+  
+    % endif
+  
+  % elif verfahren.status == "klage":
+    % if verfahren.antrag.eilverfahren == True:
+  - Antrag auf einstweilige Anordnung  
+  - Persönliche Auswertung mit deinen nächsten Schritten und Infos zur Leistung
+  
+    % else:
+  - Persönliche Auswertung mit Infos zur Leistung
+
+  Weitere Dokumente konnten wir leider nicht für dich erstellen, denn aktuell kannst du keine weiteren Schritte vornehmen. Du musst abwarten, wie das Gericht über die Klage entscheidet.  
+  
+    % endif
+  
+  % endif
+
+  **Klicke auf weiter, um deine Dokumente zu erhalten.** 
+  
+continue button field: dokumente_erstellen
+---
+sets: endscreen
+code: |
+  extra_kostenlos = \
+    (
+      verfahren.status == "widerspruch" and
+      not verfahren.frist_abgelaufen and
+      not verfahren.antrag.eilverfahren
+    ) or \
+    (
+      verfahren.status == "antrag" and
+      not verfahren.frist_abgelaufen and
+      not verfahren.antrag.eilverfahren
+    )
+  if not defined("checkout_done") and not (kostenlos or extra_kostenlos):
+    checkout_done = True
+    redirect_url = create_checkout_session(
+      price_id=stripe_price_id,
+      success_event="stripe_payment_success",
+      email=delivery_email,
+      quantity=1,
+      api_key=None,
+    )
+    checkout_preview
+  if not defined("send_documents"):
+    send_documents = send_email(to=delivery_email, template=notification, attachments=dokumente)
+  show_endscreen
+  endscreen = True
+---
+template: notification
+subject: |
+  Deine Dokumente von DeinRecht
+content: |
+  Lieber Nutzer,
+
+  unten findest du die Dokumente, die DeinRecht für dich erstellt hat. Bitte beachte die Hinweise in deiner persönlichen Auswertung.
+
+  Vielen Dank für dein Vertrauen und dass du DeinRecht nutzt!  
+---
+# Logik für Infoblatt: Fälle, in denen keine Dokumente erstellt werden können
+code: |
+  if verfahren.antrag.frist_behoerde == 3:
+    datum_untaetigkeitsklage_antrag = as_datetime(verfahren.schritte["antrag"].datum).plus(months=3)
+  if verfahren.antrag.frist_behoerde == 6:
+    datum_untaetigkeitsklage_antrag = as_datetime(verfahren.schritte["antrag"].datum).plus(months=6)
+
+---
+code: |
+  if verfahren.antrag.frist_behoerde == 3:
+    datum_untaetigkeitsklage_widerspruch = as_datetime(verfahren.schritte["widerspruch"].datum).plus(months=3)
+  if verfahren.antrag.frist_behoerde == 6:
+    datum_untaetigkeitsklage_widerspruch = as_datetime(verfahren.schritte["widerspruch"].datum).plus(months=6)
+  
+---
+code: |
+  date_eilantrag = as_datetime(verfahren.antrag.leistung_ab_wann).minus(weeks=8)

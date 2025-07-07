@@ -1,0 +1,110 @@
+question: |
+  Prüfe deine Angaben
+subquestion: |
+  Wir haben deine persönlichen Daten noch einmal zusammengefasst. Bitte prüfe noch einmal, ob alles stimmt. Wenn du deine Angaben korrigieren möchtest, klicke auf den jeweiligen Button.  
+review:
+  - Antragsteller: verfahren.antragsteller[i].name.first
+    button: |
+      **Leistung für:**  
+      ${ verfahren.antragsteller[i].name.first } ${ verfahren.antragsteller[i].name.last }  
+      ${ verfahren.antragsteller[i].address.address }  
+      ${ verfahren.antragsteller[i].address.zip } ${ verfahren.antragsteller[i].address.city }  
+  - Vertreter: verfahren.antragsteller[i].vertreter[j].name.first 
+    button: |
+      **vertreten durch:**  
+      % if verfahren.antragsteller[i].vertreter.there_are_any == True:
+        % for v in verfahren.antragsteller[i].vertreter:
+      ${verfahren.antragsteller[i].vertreter[j].name.first} ${verfahren.antragsteller[i].vertreter[j].name.last}  
+      ${verfahren.antragsteller[i].vertreter[j].address.address}  
+      ${verfahren.antragsteller[i].vertreter[j].address.zip} ${verfahren.antragsteller[i].vertreter[j].address.city}  
+      Vertretungsberechtigt als:
+          % if verfahren.antragsteller[i].vertreter[j].rolle == "mutter":
+      Mutter  
+      
+          % elif verfahren.antragsteller[i].vertreter[j].rolle == "vater":
+      Vater  
+      
+          % elif verfahren.antragsteller[i].vertreter[j].rolle == "vormund":
+      Vormund  
+      
+          % elif verfahren.antragsteller[i].vertreter[j].rolle == "vormundin":
+      Vormundin  
+      
+          % elif verfahren.antragsteller[i].vertreter[j].rolle == "betreuer":
+      Betreuer  
+      
+          % elif verfahren.antragsteller[i].vertreter[j].rolle == "betreuerin":
+      Betreuerin  
+      
+          % elif verfahren.antragsteller[i].vertreter[j].rolle == "vorsorgebevollmaechtigter":
+      Vorsorgebevollmächtigter  
+      
+          % elif verfahren.antragsteller[i].vertreter[j].rolle == "vorsorgebevollmaechtigte":
+      Vorsorgebevollmächtigte  
+      
+          % endif
+        % endfor
+      % endif
+  - E-Mail: verfahren.antragsteller[0].email 
+    button: |
+      **E-Mail:** ${verfahren.antragsteller[0].email}
+  
+continue button field: review_personal_data
+under: |
+  In den nächsten Fragen geht es um deine derzeitige rechtliche Situation.
+---
+question: |
+  Prüfe deine Angaben
+subquestion: |
+  Wir haben deine Angaben noch einmal zusammengefasst. Bitte prüfe noch einmal, ob alles stimmt. Wenn du deine Angaben korrigieren möchtest, klicke auf den jeweiligen Button.  
+review:
+  - Leistung ab wann: verfahren.antrag.leistung_ab_wann
+    button: |
+      **Leistung benötigt ab:** ${verfahren.antrag.leistung_ab_wann}
+  - Unternommene Schritte: verfahren.status 
+    button: |
+      **Das hast du bislang unternommen:**  
+      ${vorhandene_schritte[i].frage}
+  - Antrag: verfahren.schritte["antrag"].datum
+    button: |
+      **Deine Angaben zu deinem Antrag:**  
+      Datum des Antrags: ${verfahren.schritte["antrag"].datum}
+  - Bescheid: verfahren.schritte["bescheid"].datum
+    button: |
+      **Deine Angaben zum Bescheid:**  
+      Aktenzeichen: ${verfahren.schritte["bescheid"].az}  
+      Datum des Bescheids: ${verfahren.schritte["bescheid"].datum}
+  - Widerspruch: verfahren.schritte["widerspruch"].datum
+    button: |
+      **Deine Angaben zu deinem Widerspruch:**  
+      Datum des Widerspruchs: ${verfahren.schritte["widerspruch"].datum}  
+  - Widerspruchsbescheid: verfahren.schritte["widerspruchsbescheid"].datum
+    button: |
+      **Deine Angaben zum Widerspruchsbescheid:**  
+      Aktenzeichen: ${verfahren.schritte["widerspruchsbescheid"].az}  
+      Datum des Bescheids: ${verfahren.schritte["widerspruchsbescheid"].datum}
+  - Rechtsbehelfsbelehrung: verfahren.antrag.rechtsbehelfsbelehrung
+    button: |
+      **Deine Angaben zur Rechtsbehelfsbelehrung:**   
+      % if verfahren.antrag.rechtsbehelfsbelehrung == True:
+      Bescheid enthält eine Rechtsbehelfsbelehrung  
+      % else:
+      Bescheid enthält keine Rechtsbehelfsbelehrung  
+      % endif
+  - Daten deiner Behörde: verfahren.behoerde.name.text
+    button: |
+      **Daten deiner Behörde:**  
+      ${verfahren.behoerde.name.text}  
+      ${verfahren.behoerde.address.address}  
+      ${verfahren.behoerde.address.zip} ${verfahren.behoerde.address.city}  
+  - Deine Begründung: begruendung
+    button: |
+      **Deine Begründung:**  
+      ${begruendung}
+  - Eilbedürftigkeit: begruendung_eilbeduerftigkeit
+    button: |
+      **Darum brauchst du die Leistung ab ${verfahren.antrag.leistung_ab_wann}:**    
+      ${begruendung_eilbeduerftigkeit}
+    
+  
+continue button field: review
